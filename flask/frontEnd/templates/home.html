@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up</title>
+</head>
+<body>
+    <p> Hi, This is the registration page </p>
+    <p> Today is {{ day_of_Week }} </p>
+    <p> Current time {{ current_time }} </p>
+    <div class = "centered">
+
+    <form action="/submit" method="post">
+        <input type="text" name="username" placeholder="Enter your username">
+        <br>
+        <input type="email" name="email" placeholder="Enter your email">
+        <br>
+        <button type="submit">Submit</button>
+    </form>
+    </div>
+</body>
+<style>
+    body {
+        background-color: whitesmoke;
+        font-family: Arial, sans-serif;
+        text-align: center;
+        padding-top: 50px;
+    }
+    p {
+        font-size: 24px;
+        color: black;
+    }
+    .centered {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+    </style>
+</html>
