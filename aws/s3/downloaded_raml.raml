@@ -1,0 +1,139 @@
+#%RAML 1.0
+title: Workday Finance System API
+description: This Api is used to connect with Workday Finance.
+version: v1
+mediaType: application/json
+protocols: [HTTPS]
+baseUri: https://<subdomain>.cloudhub.io/api/v1/workday-finance-s-api/
+
+uses:
+  api-library:  /exchange_modules/3eb49738-e662-4786-b92e-d93dc80a9352/ps-raml-library/1.0.1/raml-library.raml
+
+traits:
+  searchableByDateRange: !include traits/searchableByDateRange.raml
+
+types:
+  customer: !include /exchange_modules/3eb49738-e662-4786-b92e-d93dc80a9352/customer-datatype-fragment/1.0.2/customer.raml
+  contract: !include dataTypes/contract.raml
+  payment: !include dataTypes/payment.raml
+  invoice: !include dataTypes/invoice.raml
+
+securedBy: api-library.client-id-enforcement
+
+/customers:
+  displayName: Customers
+  is:
+    - api-library.common-error-handling 
+    - api-library.correlation-id-headers: {success-http-status: 201}
+  post:
+    displayName: Create Customer
+    body:
+      application/json:
+        type: customer
+        example: !include /exchange_modules/3eb49738-e662-4786-b92e-d93dc80a9352/customer-datatype-fragment/1.0.2/examples/customer.raml
+    responses:
+      201:
+        body:
+          application/json:
+            type: api-library.success-response
+            example: !include /examples/responses/customerCreate.raml
+  /{customerId}:
+    displayName: Customer
+    is:
+      - api-library.common-error-handling
+      - api-library.correlation-id-headers: {success-http-status: 200}
+    uriParameters:
+      customerId:
+        displayName: Customer ID
+        type: string
+    put:
+      displayName: Update Customer
+      body:
+        application/json:
+          type: customer
+          example: !include /exchange_modules/3eb49738-e662-4786-b92e-d93dc80a9352/customer-datatype-fragment/1.0.2/examples/customer.raml
+      responses:
+        200:
+          body:
+            application/json:
+              type: api-library.success-response
+              example: !include /examples/responses/customerUpdate.raml
+      
+    /contracts:
+      displayName: Contracts
+      is:
+        - api-library.common-error-handling
+        - api-library.correlation-id-headers: {success-http-status: 201}
+      post:
+        displayName: Create Contract
+        body:
+          application/json:
+            type: contract
+            example: !include examples/contract.raml
+        responses:
+          201:
+            body:
+              application/json:
+                type: api-library.success-response
+                example: !include examples/responses/contractCreate.raml
+
+      /{contractId}:
+        displayName: Contract
+        is:
+          - api-library.common-error-handling
+          - api-library.correlation-id-headers: {success-http-status: 200}
+        uriParameters:
+          contractId:
+            displayName: Contract
+            type: string
+        put:
+          displayName: Update Contract
+          body:
+            application/json:
+              type: contract
+              example: !include examples/contract.raml
+          responses:
+            200:
+              body:
+                application/json: 
+                  type: api-library.success-response
+                  example: !include examples/responses/contractUpdate.raml
+/invoices:
+  displayName: Invoices
+  is:
+    - api-library.common-error-handling
+    - api-library.correlation-id-headers: {success-http-status: 200}
+  get:
+    displayName: Get Invoices
+    is:
+      - searchableByDateRange
+    responses:
+      200:
+        body:
+          application/json:
+            type: invoice[]
+            example: !include examples/invoices.raml
+/payments:
+  displayName: Payments
+  is:
+    - api-library.common-error-handling
+    - api-library.correlation-id-headers: {success-http-status: 200}
+  get:
+    displayName: Get Payments
+    is:
+      - searchableByDateRange
+    responses:
+      200:
+        body:
+          application/json:
+            type: payment[]
+            example: !include examples/payments.raml
+
+/health-check:
+  is:
+    - api-library.common-error-handling
+    - api-library.correlation-id-headers: {success-http-status: 200}
+  type:
+    api-library.healthCheck:
+      api-name: "Workday Finance System API"
+      api-version: 1.0.0

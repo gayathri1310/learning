@@ -1,0 +1,1 @@
+This is sample text file which i am uploading from local to s3 bucket.
