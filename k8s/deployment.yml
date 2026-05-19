@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kub-app
+  labels:
+    app: kub-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kub-app
+  template:
+    metadata:
+      labels:
+        app: kub-app
+    spec:
+      containers:
+      - name: kub-app
+        image: kube-app-backend
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 4000
